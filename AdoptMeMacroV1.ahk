@@ -108,15 +108,19 @@ class TaskFunctions {
     static OpenTaskMenu() {
         Variables.CurrentTries := 0
         ; Wait until the task button is visible (not white = UI loaded)
+        
         while (GeneralFunctions.CheckWhite(1750, 70)) {
+            Send("{a Down}")
             GeneralFunctions.SafeClick(1100, 730)
             Variables.CurrentTries++
             if (Variables.CurrentTries > 5) {
                 RobloxFunctions.ResetCharacter()
                 Variables.CurrentTries := 0
             }
+            Send("{a Up}")
         }
-    }
+        
+    } ;toilet 650, 531
 
     static CheckTasks() {
         TaskFunctions.ResetTasks()
@@ -178,6 +182,14 @@ class Tasks {
         GeneralFunctions.SafeClick(711, 453, 10000)
     }
 
+    static TaskPotty() {
+        if (!Variables.Aligned) {
+            Tasks.Align()
+        }
+        GeneralFunctions.SafeClick(650, 531, 10000)
+    }
+
+
     static TaskDrink() {
         if (!Variables.Aligned) {
             Tasks.Align()
@@ -194,10 +206,21 @@ class Tasks {
 
     static TaskChoose() {
         TaskFunctions.OpenTaskMenu()
-        GeneralFunctions.SafeClick(Variables.TaskAreas[1].X, Variables.TaskAreas[1].Y, 0.25)
+        for index, task in Variables.CurrentTasks {
+            if (task == "Choose") {
+                GeneralFunctions.SafeClick(Variables.TaskAreas[index].X, Variables.TaskAreas[index].Y, 10000)
+            }
+        }
         GeneralFunctions.SafeClick(969,496, 0.25)
     }
 
+    static TaskBored() {
+        if (!Variables.Aligned) {
+            Tasks.Align()
+        }
+        GeneralFunctions.SafeClick(1214, 438, 20000)
+    }
+;piano 
     static TaskPet() {
         index := 1
         TaskFunctions.OpenTaskMenu()
@@ -215,6 +238,7 @@ class Tasks {
         ToolTip("Finished petting!")
         MouseClick("Left",,,,,"U")
         GeneralFunctions.SafeClick(550, 100)  
+        SetDefaultMouseSpeed(1)
     }
 
     ; WIP
@@ -249,7 +273,8 @@ class Tasks {
             case "Dirty":   Tasks.TaskBath()
             case "Choose":  Tasks.TaskChoose()
             case "PetMe":   Tasks.TaskPet()
-            ;[WIP]case "Bored":   Tasks.TaskPlay()
+            case "Potty":   Tasks.TaskPotty()
+            case "Bored":   Tasks.TaskBored()
         }
     }
 
